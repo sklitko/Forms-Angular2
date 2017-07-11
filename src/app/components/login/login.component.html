@@ -1,0 +1,24 @@
+<md-card class="card">
+  <md-icon>account_circle</md-icon>
+  <h2>Вход</h2>
+  <form class="example-form" #loginForm="ngForm">
+    <md-input-container class="example-full-width">
+      <input mdInput placeholder="Email" [formControl]="emailFormControl" [(ngModel)]="email" name="email">
+      <md-error *ngIf="emailFormControl.hasError('pattern')">
+        Please enter a valid email address
+      </md-error>
+      <md-error *ngIf="emailFormControl.hasError('required')">
+        Email is <strong>required</strong>
+      </md-error>
+    </md-input-container>
+    <md-input-container class="example-full-width">
+      <input mdInput placeholder="Password" [(ngModel)]="password" name="password" type="password" #PasswordRef="ngModel" pattern="(?=.*\d)(?=.*[A-Z]).{10,}"
+        required>
+      <md-error [hidden]="PasswordRef.valid || PasswordRef.pristine" class="error-message">
+        Пароль: не менее 10 символов, не менее1 числа, не менее 1 буквы в верхнем регистре.
+      </md-error>
+    </md-input-container>
+    <a md-raised-button [disabled]="!loginForm.form.valid || !emailFormControl.valid" routerLink="/pay">Вход</a>
+  </form>
+</md-card>
+
