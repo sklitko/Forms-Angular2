@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 
+const PHONE_REGEX = '\[0-9]{9}';
 const NUMBER_REGEX = '[0-9]+$';
 
 @Component({
@@ -10,7 +11,8 @@ const NUMBER_REGEX = '[0-9]+$';
 })
 export class PayComponent implements OnInit {
 
-  
+  payForm: FormGroup;
+
   yearSel = '17';
   monthSel = '01';
 
@@ -44,17 +46,85 @@ export class PayComponent implements OnInit {
       {value: '28'}
     ]
 
-  constructor() { }
+  constructor(private fb: FormBuilder) { }
 
-  ngOnInit() {
+  ngOnInit():void {
+    this.buildForm();
   }
 
-   amountFormControl = new FormControl('', [
-    Validators.required,
-    Validators.min(5),
-    Validators.max(5000),
-    Validators.pattern(NUMBER_REGEX)
-    ]
-  );
+   buildForm(): void {
+    this.payForm = this.fb.group({
+      'phone': ['', [
+        Validators.required,
+        Validators.pattern(PHONE_REGEX)
+      ]],
+      'amount': ['', [
+        Validators.required,
+        Validators.pattern(NUMBER_REGEX),
+        Validators.min(5),
+        Validators.max(5000),
+      ]],
+      'card': ['', [
+        Validators.required,
+        Validators.pattern('[0-9]{16}')
+      ]],
+      'cvv': ['', [
+        Validators.required,
+        Validators.pattern('[0-9]{3}')
+      ]],
+    });
+
+    this.payForm.valueChanges.subscribe(data => this.onValueChanged(data));
+
+    this.onValueChanged();
+  }
+
+
+   onValueChanged(data?: any) {
+    if (!this.payForm) { return; }
+    const form = this.payForm;
+    for (const field in this.formErrors) {
+      
+      this.formErrors[field] = '';
+      const control = form.get(field);
+      //console.log(control);
+      if (control && !control.valid) {
+        
+        const messages = this.validationMessages[field];
+        for (const key in control.errors) {
+          console.log(key);
+          this.formErrors[field] += messages[key] + ' ';
+        }
+      }
+    }
+  }
+
+  formErrors = {
+    'phone': '',
+    'amount': '',
+    'card': '',
+    'cvv': ''
+  };
+
+  validationMessages = {
+    'phone': {
+      'required': 'введите телефон',
+      'pattern': 'введите правильный вариант телефона'
+    },
+    'amount': {
+      'required': 'введите сумму',
+      'pattern': 'введите сумму числами',
+      'min': 'введите сумму больше 5',
+      'max': 'введите сумму меньше 5000'
+    },
+    'card': {
+      'required': 'введите номер карты',
+      'pattern': 'введите правильный номер карты'
+    },
+    'cvv': {
+      'required': 'введите cvv',
+      'pattern': 'cvv не верный'
+    },
+  };
  
 }
