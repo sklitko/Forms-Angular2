@@ -8,16 +8,16 @@
       <label for="phone">Мобільний телефон:</label>
       <md-input-container class="example-full-width">
         <span mdPrefix>+380 &nbsp;</span>
-        <input type="tel" mdInput formControlName="phone" autocomplete='off' maxlength="17" placeholder="XXXXXXXXX" required>
+        <input type="tel" mdInput formControlName="phone" autocomplete='off' maxlength="17" placeholder="XXXXXXXXX">
         <md-error *ngIf="formErrors.phone">
           {{formErrors.phone}}
         </md-error>
       </md-input-container>
     </div>
     <div>
-      <label for="amount">Сумма:</label>
+      <label for="amount">Сума:</label>
       <md-input-container class="example-full-width">
-        <input type="text" mdInput formControlName="amount" autocomplete='off' required>
+        <input type="text" mdInput formControlName="amount" autocomplete='off'>
         <md-error *ngIf="formErrors.amount">
           {{formErrors.amount}}
         </md-error>
@@ -31,19 +31,19 @@
           <div id="pc">
             <md-input-container class="example-full-width">
               <input type="text" placeholder="Номер карти" mdInput formControlName="card" autocomplete='off' id="cardNumber" class="cardNumber"
-                maxlength="16" required>
+                maxlength="16">
               <md-error *ngIf="formErrors.card">
                 {{formErrors.card}}
               </md-error>
             </md-input-container>
             <div class="select_card_requisites">
-              <md-select class="iframe spec_ks cardMonth" id="cardMonth" name="months" class="iframe spec_ks cardYear" id="cardYear">
-                <md-option *ngFor="let month of months" [value]="month.value">
+              <md-select class="iframe spec_ks cardMonth" id="cardMonth" formControlName="months" class="iframe spec_ks cardYear" id="cardYear" >
+                <md-option *ngFor="let month of formService.months" [value]="month.value">
                   {{month.value}}
                 </md-option>
               </md-select>
-              <md-select name="years" class="iframe spec_ks cardYear" id="cardYear">
-                <md-option *ngFor="let year of years" [value]="year.value">
+              <md-select formControlName="years" class="iframe spec_ks cardYear" id="cardYear">
+                <md-option *ngFor="let year of formService.years" [value]="year.value">
                   {{year.value}}
                 </md-option>
               </md-select>
@@ -53,7 +53,7 @@
         <div class="card2 iframe">
           <div class="card2_line"></div>
           <md-input-container class="example-full-width">
-            <input placeholder="CVV2/CVC2" type="password" id="cardCvv" autocomplete="off" mdInput formControlName="cvv" maxlength="3" required>
+            <input placeholder="CVV2/CVC2" type="password" id="cardCvv" autocomplete="off" mdInput formControlName="cvv" maxlength="3" >
             <md-error *ngIf="formErrors.cvv">
               {{formErrors.cvv}}
             </md-error>

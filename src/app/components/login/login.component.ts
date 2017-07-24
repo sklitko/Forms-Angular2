@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { FormService } from '../../form.service';
 
-const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-const PASSWD_REGEX = /(?=.*\d)(?=.*[A-Z]).{10}/;
 
 @Component({
   selector: 'app-login',
@@ -16,7 +15,7 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private formService: FormService) { }
 
   ngOnInit(): void {
     this.buildForm();
@@ -27,32 +26,16 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       'email': ['', [
         Validators.required,
-        Validators.pattern(EMAIL_REGEX)
+        Validators.pattern('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')
       ]],
       'password': ['', [
         Validators.required,
-        Validators.pattern(PASSWD_REGEX)
+        Validators.pattern('(?=^.{10,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$')
       ]]
     });
 
-    this.loginForm.valueChanges.subscribe(data => this.onValueChanged(data));
+    this.loginForm.valueChanges.subscribe(data => this.formService.onValueChanged(data, this.loginForm, this.formErrors));
 
-    this.onValueChanged();
-  }
-
-  onValueChanged(data?: any) {
-    if (!this.loginForm) { return; }
-    const form = this.loginForm;
-    for (const field in this.formErrors) {
-      this.formErrors[field] = '';
-      const control = form.get(field);
-      if (control && !control.valid) {
-        const messages = this.validationMessages[field];
-        for (const key in control.errors) {
-          this.formErrors[field] += messages[key] + ' ';
-        }
-      }
-    }
   }
 
   formErrors = {
@@ -60,16 +43,7 @@ export class LoginComponent implements OnInit {
     'password': ''
   };
 
-  validationMessages = {
-    'email': {
-      'required': 'Email is required.',
-      'pattern': 'Email failed'
-    },
-    'password': {
-      'required': 'Password is required.',
-      'pattern': 'password failed'
-    }
-  };
+
 
 }
 

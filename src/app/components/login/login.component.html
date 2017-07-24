@@ -1,15 +1,15 @@
  <md-card class="card">
   <md-icon>account_circle</md-icon>
-  <h2>Вход</h2>
+  <h2>Вхiд</h2>
   <form class="example-form" [formGroup]="loginForm">
     <md-input-container class="example-full-width">
-      <input mdInput placeholder="Email" formControlName="email" required>
+      <input mdInput placeholder="Email" formControlName="email">
       <md-error *ngIf="formErrors.email">
         {{formErrors.email}}
       </md-error>
     </md-input-container>
     <md-input-container class="example-full-width">
-      <input mdInput placeholder="Password" formControlName="password" type="password" required>
+      <input mdInput placeholder="Пароль" formControlName="password" type="password">
       <md-error [hidden]="formErrors.password" class="error-message">
         {{formErrors.password}}
       </md-error>
