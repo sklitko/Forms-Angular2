@@ -3,24 +3,23 @@
     Поповнюйте онлайн без комісії
   </h1>
 
-  <form #payForm="ngForm" class="payForm">
+  <form [formGroup]="payForm" class="payForm">
     <div>
       <label for="phone">Мобільний телефон:</label>
       <md-input-container class="example-full-width">
         <span mdPrefix>+380 &nbsp;</span>
-        <input type="tel" #PhoneRef="ngModel" mdInput name="phone" [(ngModel)]="phone" autocomplete='off' maxlength="17" placeholder="(XX)XXXXXXX"
-          pattern="\([0-9]{2}\)[0-9]{7}" required>
+        <input type="tel" mdInput formControlName="phone" autocomplete='off' maxlength="17" placeholder="XXXXXXXXX">
+        <md-error *ngIf="formErrors.phone">
+          {{formErrors.phone}}
+        </md-error>
       </md-input-container>
     </div>
     <div>
-      <label for="phone">Сумма:</label>
+      <label for="amount">Сума:</label>
       <md-input-container class="example-full-width">
-        <input type="text" [formControl]="amountFormControl" mdInput name="amount" [(ngModel)]="amount" autocomplete='off'>
-        <md-error *ngIf="amountFormControl.hasError('pattern') || amountFormControl.hasError('min') || amountFormControl.hasError('max')">
-          введите число от 5 до 5000, буквы запрещены
-        </md-error>
-        <md-error *ngIf="amountFormControl.hasError('required')">
-          Введите сумму
+        <input type="text" mdInput formControlName="amount" autocomplete='off'>
+        <md-error *ngIf="formErrors.amount">
+          {{formErrors.amount}}
         </md-error>
       </md-input-container>
     </div>
@@ -31,18 +30,20 @@
           <p class="card_details_text">Введіть реквізити платіжної картки</p>
           <div id="pc">
             <md-input-container class="example-full-width">
-              <input type="text" placeholder="Номер карти" #CardRef="ngModel" mdInput name="card" [(ngModel)]="card" autocomplete='off'
-                id="cardNumber" class="cardNumber" maxlength="16" pattern="[0-9]{16}" required>
+              <input type="text" placeholder="Номер карти" mdInput formControlName="card" autocomplete='off' id="cardNumber" class="cardNumber"
+                maxlength="16">
+              <md-error *ngIf="formErrors.card">
+                {{formErrors.card}}
+              </md-error>
             </md-input-container>
             <div class="select_card_requisites">
-              <md-select class="iframe spec_ks cardMonth" id="cardMonth" [(ngModel)]="monthSel" name="months" class="iframe spec_ks cardYear"
-                id="cardYear">
-                <md-option *ngFor="let month of months" [value]="month.value">
+              <md-select class="iframe spec_ks cardMonth" id="cardMonth" formControlName="months" class="iframe spec_ks cardYear" id="cardYear" >
+                <md-option *ngFor="let month of formService.months" [value]="month.value">
                   {{month.value}}
                 </md-option>
               </md-select>
-              <md-select [(ngModel)]="yearSel" name="years" class="iframe spec_ks cardYear" id="cardYear">
-                <md-option *ngFor="let year of years" [value]="year.value">
+              <md-select formControlName="years" class="iframe spec_ks cardYear" id="cardYear">
+                <md-option *ngFor="let year of formService.years" [value]="year.value">
                   {{year.value}}
                 </md-option>
               </md-select>
@@ -52,11 +53,13 @@
         <div class="card2 iframe">
           <div class="card2_line"></div>
           <md-input-container class="example-full-width">
-            <input placeholder="CVV2/CVC2" type="password" id="cardCvv" name="cardCvv" autocomplete="off" maxlength="3" #CvvRef="ngModel"
-              mdInput name="cvv" [(ngModel)]="cvv" maxlength="3" pattern="[0-9]{3}" required>
+            <input placeholder="CVV2/CVC2" type="password" id="cardCvv" autocomplete="off" mdInput formControlName="cvv" maxlength="3" >
+            <md-error *ngIf="formErrors.cvv">
+              {{formErrors.cvv}}
+            </md-error>
           </md-input-container>
           <div class="button_wrapper">
-            <button md-raised-button type="button" class="button_submit button_payment" [disabled]="!payForm.form.valid || amountFormControl.invalid">Оплатити</button>
+            <button md-raised-button type="button" class="button_submit button_payment" [disabled]="!payForm.valid">Оплатити</button>
             <div style="clear: both;"></div>
           </div>
         </div>
